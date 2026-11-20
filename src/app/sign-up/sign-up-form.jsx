@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { Check, Circle } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
@@ -34,14 +34,18 @@ async function uploadProfileImage(file) {
   return result.url;
 }
 
-export default function SignUpForm() {
+const googleCustomerOnlyMessage =
+  "Google sign-in is available to customer accounts only. Use email and password for this account.";
+
+export default function SignUpForm({ role }) {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const redirectTo = getSafeRedirectPath(searchParams.get("redirect"));
+  const oauthErrorHandled = useRef(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("customer");
   const [businessName, setBusinessName] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [pending, setPending] = useState(false);
@@ -54,6 +58,29 @@ export default function SignUpForm() {
     { label: "At least one lowercase letter", met: /[a-z]/.test(password) },
   ];
   const passwordIsValid = passwordRules.every((rule) => rule.met);
+  const oauthError = searchParams.get("error");
+
+  useEffect(() => {
+    if (!oauthError || oauthErrorHandled.current) {
+      return;
+    }
+
+    oauthErrorHandled.current = true;
+    const message =
+      oauthError === "google_customer_only"
+        ? googleCustomerOnlyMessage
+        : "Google sign-up failed. Please try again.";
+    setErrorMessage(message);
+    toast.error(message);
+
+    const remainingParams = new URLSearchParams(searchParams.toString());
+    remainingParams.delete("error");
+    remainingParams.delete("error_description");
+    const query = remainingParams.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, {
+      scroll: false,
+    });
+  }, [oauthError, pathname, router, searchParams]);
 
   async function handleEmailSignUp(event) {
     event.preventDefault();
@@ -103,6 +130,10 @@ export default function SignUpForm() {
       const result = await authClient.signIn.social({
         provider: "google",
         callbackURL: new URL(redirectTo, window.location.origin).toString(),
+        errorCallbackURL: new URL(
+          `${window.location.pathname}${window.location.search}`,
+          window.location.origin,
+        ).toString(),
       });
       if (result.error) {
         throw new Error(result.error.message);
@@ -154,20 +185,6 @@ export default function SignUpForm() {
               onChange={(event) => setEmail(event.target.value)}
               required
             />
-          </div>
-          <div className="space-y-2">
-            <label htmlFor="sign-up-role" className="text-sm font-medium">
-              I am a
-            </label>
-            <select
-              id="sign-up-role"
-              value={role}
-              onChange={(event) => setRole(event.target.value)}
-              className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              <option value="customer">Customer</option>
-              <option value="vendor">Vendor</option>
-            </select>
           </div>
           {role === "vendor" ? (
             <div className="space-y-2">

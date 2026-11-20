@@ -31,6 +31,11 @@ const links = [
   { href: "/services", label: "Browse Services" },
 ];
 
+const desktopAuthLinkClass =
+  "inline-flex h-8 min-w-[4.5rem] items-center justify-center rounded-lg px-2.5 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring";
+const mobileAuthLinkClass =
+  "flex h-10 w-full items-center rounded-md px-3 text-base font-medium text-foreground";
+
 function getInitials(name) {
   return (
     name
@@ -148,7 +153,10 @@ export default function Navbar() {
             </Link>
           ))}
           {isPending ? (
-            <Skeleton aria-label="Loading account" className="h-9 w-28" />
+            <>
+              <Skeleton aria-hidden="true" className="h-8 w-[4.5rem] rounded-lg" />
+              <Skeleton aria-hidden="true" className="h-8 w-[4.5rem] rounded-lg" />
+            </>
           ) : user ? (
             <ProfileMenu
               user={user}
@@ -159,11 +167,16 @@ export default function Navbar() {
             <>
               <Link
                 href="/sign-in"
-                className="text-sm font-medium text-foreground transition-colors hover:text-primary"
+                className={`${desktopAuthLinkClass} text-foreground hover:bg-muted`}
               >
                 Sign In
               </Link>
-              <Button render={<Link href="/sign-up" />}>Sign Up</Button>
+              <Link
+                href="/sign-up"
+                className={`${desktopAuthLinkClass} bg-primary text-primary-foreground hover:bg-secondary`}
+              >
+                Sign Up
+              </Link>
             </>
           )}
         </div>
@@ -186,23 +199,29 @@ export default function Navbar() {
               <SheetTitle className="text-secondary">WedPlan</SheetTitle>
             </SheetHeader>
             <div className="flex flex-col gap-1 px-4">
+              {links.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="rounded-md px-3 py-3 text-base font-medium text-foreground transition-colors hover:bg-muted hover:text-primary"
+                >
+                  {link.label}
+                </Link>
+              ))}
               {isPending ? (
-                <Skeleton
-                  aria-label="Loading account"
-                  className="mx-3 my-3 h-10 w-40"
-                />
+                <>
+                  <Skeleton
+                    aria-hidden="true"
+                    className="my-1 h-10 w-full rounded-md"
+                  />
+                  <Skeleton
+                    aria-hidden="true"
+                    className="my-1 h-10 w-full rounded-md"
+                  />
+                </>
               ) : user ? (
                 <>
-                  {links.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      onClick={() => setMenuOpen(false)}
-                      className="rounded-md px-3 py-3 text-base font-medium text-foreground transition-colors hover:bg-muted hover:text-primary"
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
                   <div className="flex items-center gap-3 border-b border-border px-3 py-4">
                     <ProfileAvatar user={user} />
                     <div className="min-w-0">
@@ -239,34 +258,20 @@ export default function Navbar() {
                 </>
               ) : (
                 <>
-                  {links.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      onClick={() => setMenuOpen(false)}
-                      className="rounded-md px-3 py-3 text-base font-medium text-foreground transition-colors hover:bg-muted hover:text-primary"
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
                   <Link
                     href="/sign-in"
                     onClick={() => setMenuOpen(false)}
-                    className="rounded-md px-3 py-3 text-base font-medium text-foreground transition-colors hover:bg-muted hover:text-primary"
+                    className={mobileAuthLinkClass}
                   >
                     Sign In
                   </Link>
-                  <Button
-                    className="mt-2"
-                    render={
-                      <Link
-                        href="/sign-up"
-                        onClick={() => setMenuOpen(false)}
-                      />
-                    }
+                  <Link
+                    href="/sign-up"
+                    onClick={() => setMenuOpen(false)}
+                    className={`${mobileAuthLinkClass} mt-2 bg-primary text-primary-foreground`}
                   >
                     Sign Up
-                  </Button>
+                  </Link>
                 </>
               )}
             </div>

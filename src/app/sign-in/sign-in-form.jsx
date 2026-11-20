@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import { getSafeRedirectPath } from "@/lib/navigation";
@@ -16,14 +16,42 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
+const googleCustomerOnlyMessage =
+  "Google sign-in is available to customer accounts only. Use email and password for this account.";
+
 export default function SignInForm() {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const redirectTo = getSafeRedirectPath(searchParams.get("redirect"));
+  const oauthErrorHandled = useRef(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [pending, setPending] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const oauthError = searchParams.get("error");
+
+  useEffect(() => {
+    if (!oauthError || oauthErrorHandled.current) {
+      return;
+    }
+
+    oauthErrorHandled.current = true;
+    const message =
+      oauthError === "google_customer_only"
+        ? googleCustomerOnlyMessage
+        : "Google sign-in failed. Please try again.";
+    setErrorMessage(message);
+    toast.error(message);
+
+    const remainingParams = new URLSearchParams(searchParams.toString());
+    remainingParams.delete("error");
+    remainingParams.delete("error_description");
+    const query = remainingParams.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, {
+      scroll: false,
+    });
+  }, [oauthError, pathname, router, searchParams]);
 
   async function handleEmailSignIn(event) {
     event.preventDefault();
@@ -57,6 +85,10 @@ export default function SignInForm() {
       const result = await authClient.signIn.social({
         provider: "google",
         callbackURL: new URL(redirectTo, window.location.origin).toString(),
+        errorCallbackURL: new URL(
+          `${window.location.pathname}${window.location.search}`,
+          window.location.origin,
+        ).toString(),
       });
       if (result.error) {
         throw new Error(result.error.message);

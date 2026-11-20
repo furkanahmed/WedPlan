@@ -39,6 +39,26 @@ export const auth = betterAuth({
   },
   user: {
     modelName: "users",
+    validateUserInfo: async ({ user, source }, context) => {
+      if (
+        source.method !== "oauth" ||
+        source.oauth?.providerId !== "google" ||
+        source.action === "create-user"
+      ) {
+        return;
+      }
+
+      const existingUser = user.id
+        ? await context.context.internalAdapter.findUserById(user.id)
+        : null;
+      if (existingUser?.role !== "customer") {
+        return {
+          error: "google_customer_only",
+          errorDescription:
+            "Google sign-in is available to customer accounts only. Use email and password for this account.",
+        };
+      }
+    },
     additionalFields: {
       role: {
         type: ["customer", "vendor", "admin"],
@@ -82,6 +102,16 @@ export const auth = betterAuth({
       }
 
       const body = context.body ?? {};
+      if (
+        body.role !== undefined &&
+        body.role !== "customer" &&
+        body.role !== "vendor"
+      ) {
+        throw new APIError("BAD_REQUEST", {
+          message: "Role must be customer or vendor.",
+        });
+      }
+
       const password = body.password;
       if (
         typeof password !== "string" ||
