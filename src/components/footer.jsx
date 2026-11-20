@@ -33,7 +33,7 @@ export default function Footer() {
             />
             <span className="font-heading text-xl font-semibold">WedPlan</span>
           </Link>
-          <p className="mt-4 max-w-sm text-sm leading-6 text-background/75">
+          <p className="mt-4 max-w-sm text-sm leading-6 text-background">
             Find the right wedding professionals and bring your celebration
             together with confidence.
           </p>
@@ -46,7 +46,7 @@ export default function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-sm text-background/75 transition-colors hover:text-background"
+                  className="text-sm text-background transition-colors hover:text-background"
                 >
                   {link.label}
                 </Link>
@@ -59,7 +59,7 @@ export default function Footer() {
           <h2 className="font-heading text-lg font-semibold">Contact</h2>
           <a
             href="mailto:hello@wedplan.com"
-            className="mt-4 inline-flex items-center gap-2 text-sm text-background/75 transition-colors hover:text-background"
+            className="mt-4 inline-flex items-center gap-2 text-sm text-background transition-colors hover:text-background"
           >
             <Mail aria-hidden="true" className="size-4" />
             hello@wedplan.com
@@ -76,7 +76,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={label}
-                className="inline-flex items-center gap-2 rounded-full border border-background/20 px-3 py-2 text-sm text-background/75 transition-colors hover:border-accent hover:text-background"
+                className="inline-flex items-center gap-2 rounded-full border border-background/20 px-3 py-2 text-sm text-background transition-colors hover:border-accent hover:text-background"
               >
                 <Icon aria-hidden="true" className="size-4" />
                 <span>{label}</span>
@@ -86,7 +86,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-background/15 px-4 py-5 text-center text-xs text-background/70">
+      <div className="border-t border-background/15 px-4 py-5 text-center text-xs text-background">
         © WedPlan. All rights reserved.
       </div>
     </footer>

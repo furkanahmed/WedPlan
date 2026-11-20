@@ -16,7 +16,7 @@ export default function Home() {
               Your day, your way.
               <span className="mt-2 block text-primary">Let&apos;s plan it.</span>
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-foreground/75">
+            <p className="mt-6 max-w-xl text-lg leading-8 text-foreground">
               Find the people and services that make your wedding feel
               unmistakably yours. Your celebration starts with the right
               inspiration.
@@ -53,7 +53,7 @@ export default function Home() {
             <h2 className="font-heading text-3xl font-semibold text-secondary">
               The beginning of something beautiful
             </h2>
-            <p className="mt-2 max-w-2xl text-foreground/75">
+            <p className="mt-2 max-w-2xl text-foreground">
               Browse the services that will bring your ideas to life.
             </p>
           </div>

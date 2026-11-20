@@ -60,7 +60,7 @@
   --secondary: #6D2946;
   --secondary-foreground: #FFFDF9;
   --muted: #F7F1EC;
-  --muted-foreground: #6B625F;
+  --muted-foreground: #4B5563;
   --accent: #D8B36A;
   --accent-foreground: #1F2937;
   --destructive: oklch(0.577 0.245 27.325);
@@ -100,5 +100,6 @@
   h5,
   h6 {
     font-family: var(--font-playfair), Georgia, serif;
+    font-weight: 600;
   }
 }

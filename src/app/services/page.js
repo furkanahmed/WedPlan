@@ -10,7 +10,7 @@ export default function ServicesPage() {
         <h1 className="mt-2 font-heading text-4xl font-semibold text-secondary sm:text-5xl">
           Browse Wedding Services
         </h1>
-        <p className="mt-4 max-w-2xl text-base leading-7 text-foreground/75">
+        <p className="mt-4 max-w-2xl text-base leading-7 text-foreground">
           Discover the talented professionals who can help make your day
           unforgettable.
         </p>

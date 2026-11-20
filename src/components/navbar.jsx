@@ -45,14 +45,14 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-foreground/80 transition-colors hover:text-primary"
+              className="text-sm font-medium text-foreground transition-colors hover:text-primary"
             >
               {link.label}
             </Link>
           ))}
           <Link
             href="/sign-in"
-            className="text-sm font-medium text-foreground/80 transition-colors hover:text-primary"
+            className="text-sm font-medium text-foreground transition-colors hover:text-primary"
           >
             Sign In
           </Link>
