@@ -1,14 +1,54 @@
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Heart } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import {
+  ArrowRight,
+  Camera,
+  Check,
+  Flower2,
+  Heart,
+  MapPin,
+  Sparkles,
+  Shirt,
+  Utensils,
+} from "lucide-react";
+import HomeFeaturedServices from "@/components/home-featured-services";
+import Reveal from "@/components/reveal";
+import { WEDDING_CATEGORIES } from "@/lib/categories";
+
+const categoryIcons = [Camera, MapPin, Flower2, Utensils, Sparkles, Shirt];
+
+const benefits = [
+  "Discover trusted wedding professionals in one place",
+  "Compare services, prices, and locations with ease",
+  "Find a team that fits your vision and your budget",
+];
+
+const steps = [
+  {
+    number: "01",
+    title: "Explore",
+    description: "Browse wedding services and discover local professionals.",
+  },
+  {
+    number: "02",
+    title: "Choose",
+    description: "Compare details and find the services that feel right.",
+  },
+  {
+    number: "03",
+    title: "Celebrate",
+    description: "Bring your plans together and enjoy your special day.",
+  },
+];
 
 export default function Home() {
   return (
     <main>
-      <section className="relative overflow-hidden bg-background">
-        <div className="mx-auto grid min-h-[min(42rem,calc(100vh-4rem))] max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8 lg:py-28">
-          <div className="max-w-2xl">
-            <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-white/70 px-4 py-2 text-sm font-medium text-secondary">
+      <section className="relative isolate overflow-hidden bg-background">
+        <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,#FFFDF9_0%,#FFFDF9_48%,rgba(255,253,249,0.2)_100%)]" />
+        <div className="mx-auto grid min-h-[min(42rem,calc(100vh-4rem))] max-w-7xl items-center gap-8 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-24">
+          <div className="relative z-10 max-w-2xl">
+            <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-white/80 px-4 py-2 text-sm font-medium text-secondary">
               <Heart aria-hidden="true" className="size-4 fill-primary text-primary" />
               Made for your forever
             </p>
@@ -17,53 +57,136 @@ export default function Home() {
               <span className="mt-2 block text-primary">Let&apos;s plan it.</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-foreground">
-              Find the people and services that make your wedding feel
-              unmistakably yours. Your celebration starts with the right
-              inspiration.
+              Find trusted wedding professionals and bring your celebration to
+              life, all in one place.
             </p>
-            <Button
-              nativeButton={false}
-              size="lg"
-              className="mt-9 h-12 rounded-full px-6"
-              render={
-                <Link href="/services">
-                  Explore Wedding Services
-                  <ArrowRight aria-hidden="true" className="ml-2 size-4" />
-                </Link>
-              }
-            />
+            <Link
+              href="/services"
+              className="mt-9 inline-flex h-12 items-center justify-center rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground transition-colors hover:bg-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            >
+              Explore Wedding Services
+              <ArrowRight aria-hidden="true" className="ml-2 size-4" />
+            </Link>
           </div>
-
-          <div
-            aria-hidden="true"
-            className="relative mx-auto flex aspect-square w-full max-w-md items-center justify-center rounded-full bg-[radial-gradient(circle_at_35%_30%,#F7E8E3_0%,#F7E8E3_25%,#E9C9C0_25%,#E9C9C0_45%,#D8B36A_45%,#D8B36A_48%,#FFFDF9_48%)]"
-          >
-            <div className="rounded-full bg-background/90 p-8 text-center shadow-lg shadow-secondary/10 backdrop-blur">
-              <Heart className="mx-auto size-10 fill-primary text-primary" />
-              <p className="mt-3 font-heading text-2xl font-semibold text-secondary">
-                Plan with love
-              </p>
-            </div>
+          <div className="relative mx-auto aspect-[4/3] w-full max-w-xl overflow-hidden rounded-[2rem] sm:rounded-[3rem]">
+            <Image
+              src="/wedding-hero.svg"
+              alt=""
+              fill
+              loading="eager"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover"
+            />
           </div>
         </div>
       </section>
 
-      <section className="border-t border-border bg-white/60 py-16">
-        <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-4 sm:px-6 md:flex-row md:items-center lg:px-8">
-          <div>
-            <h2 className="font-heading text-3xl font-semibold text-secondary">
-              The beginning of something beautiful
-            </h2>
-            <p className="mt-2 max-w-2xl text-foreground">
-              Browse the services that will bring your ideas to life.
+      <HomeFeaturedServices />
+
+      <section className="border-y border-border bg-white/60 py-16 sm:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Reveal className="mx-auto mb-10 max-w-2xl text-center">
+            <p className="text-sm font-semibold tracking-wide text-primary uppercase">
+              Browse by category
             </p>
+            <h2 className="mt-2 font-heading text-3xl font-semibold text-secondary sm:text-4xl">
+              Find the perfect fit
+            </h2>
+            <p className="mt-3 text-foreground">
+              Start with the services that matter most to your celebration.
+            </p>
+          </Reveal>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {WEDDING_CATEGORIES.map(({ name, slug }, index) => {
+              const Icon = categoryIcons[index];
+              return (
+                <Reveal key={slug}>
+                  <Link
+                    href={`/services?category=${encodeURIComponent(slug)}`}
+                    className="group flex h-full items-center gap-4 rounded-2xl border border-border bg-background p-5 transition-all hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg hover:shadow-secondary/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  >
+                    <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                      <Icon aria-hidden="true" className="size-6" />
+                    </span>
+                    <span className="flex-1">
+                      <span className="block font-heading text-lg font-semibold text-secondary">
+                        {name}
+                      </span>
+                      <span className="mt-1 inline-flex items-center text-sm text-muted-foreground group-hover:text-primary">
+                        Explore category
+                        <ArrowRight
+                          aria-hidden="true"
+                          className="ml-1 size-4"
+                        />
+                      </span>
+                    </span>
+                  </Link>
+                </Reveal>
+              );
+            })}
           </div>
-          <Button
-            nativeButton={false}
-            variant="outline"
-            className="rounded-full border-primary text-primary hover:bg-primary/5"
-            render={<Link href="/services">Browse Services</Link>}
-          />
+        </div>
+      </section>
+
+      <section className="py-16 sm:py-20">
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 md:grid-cols-2 md:items-center lg:px-8">
+          <Reveal>
+            <p className="text-sm font-semibold tracking-wide text-primary uppercase">
+              Why WedPlan
+            </p>
+            <h2 className="mt-2 font-heading text-3xl font-semibold text-secondary sm:text-4xl">
+              Why Choose WedPlan?
+            </h2>
+            <p className="mt-4 max-w-xl leading-7 text-foreground">
+              Planning your wedding should feel exciting. WedPlan makes it
+              easier to discover the right people and services for your day.
+            </p>
+          </Reveal>
+          <div className="space-y-4">
+            {benefits.map((benefit) => (
+              <Reveal key={benefit}>
+                <div className="flex items-start gap-3 rounded-xl border border-border bg-white p-4">
+                  <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <Check aria-hidden="true" className="size-4" />
+                  </span>
+                  <p className="font-medium text-foreground">{benefit}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-secondary py-16 text-background sm:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Reveal className="mx-auto mb-10 max-w-2xl text-center">
+            <p className="text-sm font-semibold tracking-wide text-accent uppercase">
+              A simple start
+            </p>
+            <h2 className="mt-2 font-heading text-3xl font-semibold sm:text-4xl">
+              How WedPlan Works
+            </h2>
+            <p className="mt-3 text-background/80">
+              A few simple steps from inspiration to celebration.
+            </p>
+          </Reveal>
+          <div className="grid gap-5 md:grid-cols-3">
+            {steps.map((step) => (
+              <Reveal key={step.number}>
+                <article className="h-full rounded-2xl border border-background/15 bg-background/5 p-6">
+                  <span className="font-heading text-3xl font-semibold text-accent">
+                    {step.number}
+                  </span>
+                  <h3 className="mt-4 font-heading text-xl font-semibold">
+                    {step.title}
+                  </h3>
+                  <p className="mt-2 leading-6 text-background/80">
+                    {step.description}
+                  </p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
     </main>
