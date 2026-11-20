@@ -1,45 +1,18 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Suspense } from "react";
+import SignUpForm from "./sign-up-form";
 
 export default function SignUpPage() {
   return (
     <main className="flex items-center justify-center px-4 py-16 sm:px-6">
-      <Card className="w-full max-w-lg border-border shadow-sm">
-        <CardHeader className="text-center">
-          <CardTitle className="text-3xl text-secondary">
-            Start planning with WedPlan
-          </CardTitle>
-          <CardDescription className="text-base">
-            Create an account to make your wedding vision a reality.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col items-center gap-5">
-          <p className="text-center text-sm text-muted-foreground">
-            Account registration will be available soon.
+      <Suspense
+        fallback={
+          <p role="status" className="text-sm text-muted-foreground">
+            Loading sign-up form...
           </p>
-          <Button
-            variant="outline"
-            className="w-full"
-            render={<Link href="/services">Explore services instead</Link>}
-          />
-          <p className="text-sm text-muted-foreground">
-            Already have an account?{" "}
-            <Link
-              href="/sign-in"
-              className="font-medium text-primary underline-offset-4 hover:underline"
-            >
-              Sign in
-            </Link>
-          </p>
-        </CardContent>
-      </Card>
+        }
+      >
+        <SignUpForm />
+      </Suspense>
     </main>
   );
 }

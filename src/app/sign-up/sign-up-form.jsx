@@ -1,0 +1,290 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { Check, Circle } from "lucide-react";
+import { toast } from "sonner";
+import { authClient } from "@/lib/auth-client";
+import { getSafeRedirectPath } from "@/lib/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+
+async function uploadProfileImage(file) {
+  const formData = new FormData();
+  formData.append("image", file);
+
+  const response = await fetch("/api/upload", {
+    method: "POST",
+    body: formData,
+  });
+  const result = await response.json();
+
+  if (!response.ok || typeof result.url !== "string") {
+    throw new Error(result.error ?? "Image upload failed.");
+  }
+
+  return result.url;
+}
+
+export default function SignUpForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = getSafeRedirectPath(searchParams.get("redirect"));
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("customer");
+  const [businessName, setBusinessName] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const [pending, setPending] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const passwordRules = [
+    { label: "At least 6 characters", met: password.length >= 6 },
+    { label: "At least one uppercase letter", met: /[A-Z]/.test(password) },
+    { label: "At least one lowercase letter", met: /[a-z]/.test(password) },
+  ];
+  const passwordIsValid = passwordRules.every((rule) => rule.met);
+
+  async function handleEmailSignUp(event) {
+    event.preventDefault();
+    setPending(true);
+    setErrorMessage("");
+
+    try {
+      let image;
+      if (imageFile) {
+        setUploadingImage(true);
+        image = await uploadProfileImage(imageFile);
+        setUploadingImage(false);
+      }
+
+      const signUpData = { name, email, password, role };
+      if (image) {
+        signUpData.image = image;
+      }
+      if (role === "vendor") {
+        signUpData.businessName = businessName.trim();
+      }
+
+      const result = await authClient.signUp.email(signUpData);
+      if (result.error) {
+        throw new Error(result.error.message);
+      }
+
+      toast.success("Your WedPlan account is ready.");
+      router.replace(redirectTo);
+      router.refresh();
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Unable to create your account.";
+      setErrorMessage(message);
+      toast.error(message);
+    } finally {
+      setUploadingImage(false);
+      setPending(false);
+    }
+  }
+
+  async function handleGoogleSignUp() {
+    setPending(true);
+    setErrorMessage("");
+
+    try {
+      const result = await authClient.signIn.social({
+        provider: "google",
+        callbackURL: new URL(redirectTo, window.location.origin).toString(),
+      });
+      if (result.error) {
+        throw new Error(result.error.message);
+      }
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Unable to create an account with Google.";
+      setErrorMessage(message);
+      toast.error(message);
+      setPending(false);
+    }
+  }
+
+  return (
+    <Card className="w-full max-w-lg border-border shadow-sm">
+      <CardHeader className="text-center">
+        <CardTitle className="text-3xl text-secondary">
+          Start planning with WedPlan
+        </CardTitle>
+        <CardDescription className="text-base">
+          Create an account to make your wedding vision a reality.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-5">
+        <form onSubmit={handleEmailSignUp} className="space-y-4">
+          <div className="space-y-2">
+            <label htmlFor="sign-up-name" className="text-sm font-medium">
+              Name
+            </label>
+            <Input
+              id="sign-up-name"
+              autoComplete="name"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="sign-up-email" className="text-sm font-medium">
+              Email
+            </label>
+            <Input
+              id="sign-up-email"
+              type="email"
+              autoComplete="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="sign-up-role" className="text-sm font-medium">
+              I am a
+            </label>
+            <select
+              id="sign-up-role"
+              value={role}
+              onChange={(event) => setRole(event.target.value)}
+              className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <option value="customer">Customer</option>
+              <option value="vendor">Vendor</option>
+            </select>
+          </div>
+          {role === "vendor" ? (
+            <div className="space-y-2">
+              <label
+                htmlFor="sign-up-business-name"
+                className="text-sm font-medium"
+              >
+                Business Name
+              </label>
+              <Input
+                id="sign-up-business-name"
+                value={businessName}
+                onChange={(event) => setBusinessName(event.target.value)}
+                required
+              />
+            </div>
+          ) : null}
+          <div className="space-y-2">
+            <label htmlFor="sign-up-image" className="text-sm font-medium">
+              Profile image <span className="text-muted-foreground">(optional)</span>
+            </label>
+            <Input
+              id="sign-up-image"
+              type="file"
+              accept="image/*"
+              onChange={(event) =>
+                setImageFile(event.target.files?.[0] ?? null)
+              }
+            />
+            {imageFile ? (
+              <p className="text-sm text-foreground">{imageFile.name}</p>
+            ) : null}
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="sign-up-password" className="text-sm font-medium">
+              Password
+            </label>
+            <Input
+              id="sign-up-password"
+              type="password"
+              autoComplete="new-password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required
+              minLength={6}
+            />
+            <ul aria-live="polite" className="space-y-1 pt-1 text-sm">
+              {passwordRules.map((rule) => (
+                <li
+                  key={rule.label}
+                  className={
+                    rule.met
+                      ? "flex items-center gap-2 font-medium text-green-700"
+                      : "flex items-center gap-2 text-muted-foreground"
+                  }
+                >
+                  {rule.met ? (
+                    <Check aria-hidden="true" className="size-4" />
+                  ) : (
+                    <Circle aria-hidden="true" className="size-4" />
+                  )}
+                  {rule.label}
+                </li>
+              ))}
+            </ul>
+          </div>
+          {errorMessage ? (
+            <p role="alert" className="text-sm font-medium text-red-700">
+              {errorMessage}
+            </p>
+          ) : null}
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={!passwordIsValid || pending}
+          >
+            {uploadingImage
+              ? "Uploading image..."
+              : pending
+                ? "Creating account..."
+                : "Create Account"}
+          </Button>
+        </form>
+
+        {role === "customer" ? (
+          <>
+            <div className="relative flex items-center">
+              <span className="w-full border-t border-border" />
+              <span className="px-3 text-xs text-muted-foreground">or</span>
+              <span className="w-full border-t border-border" />
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              disabled={pending}
+              onClick={handleGoogleSignUp}
+            >
+              Sign up with Google
+            </Button>
+          </>
+        ) : (
+          <p className="rounded-md bg-muted p-3 text-center text-sm font-medium text-foreground">
+            Vendor accounts are created with email and password
+          </p>
+        )}
+
+        <p className="text-center text-sm text-muted-foreground">
+          Already have an account?{" "}
+          <Link
+            href="/sign-in"
+            className="font-medium text-primary underline-offset-4 hover:underline"
+          >
+            Sign in
+          </Link>
+        </p>
+      </CardContent>
+    </Card>
+  );
+}

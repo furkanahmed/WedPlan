@@ -18,6 +18,7 @@ const protectedUserFields = [
   "isBlocked",
   "subscriptionPlan",
   "subscriptionExpiresAt",
+  "stripeCustomerId",
 ];
 
 export const auth = betterAuth({
@@ -40,7 +41,7 @@ export const auth = betterAuth({
     modelName: "users",
     additionalFields: {
       role: {
-        type: ["customer", "vendor"],
+        type: ["customer", "vendor", "admin"],
         required: false,
         defaultValue: "customer",
         input: true,
