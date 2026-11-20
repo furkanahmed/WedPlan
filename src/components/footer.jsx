@@ -87,7 +87,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-background/15 px-4 py-5 text-center text-xs text-background/70">
-        © {new Date().getFullYear()} WedPlan. All rights reserved.
+        © WedPlan. All rights reserved.
       </div>
     </footer>
   );
