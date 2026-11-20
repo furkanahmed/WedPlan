@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import { getSafeRedirectPath } from "@/lib/navigation";
@@ -118,6 +119,7 @@ export default function SignInForm() {
             </label>
             <Input
               id="sign-in-email"
+              className="h-12"
               type="email"
               autoComplete="email"
               value={email}
@@ -131,6 +133,7 @@ export default function SignInForm() {
             </label>
             <Input
               id="sign-in-password"
+              className="h-12"
               type="password"
               autoComplete="current-password"
               value={password}
@@ -157,11 +160,38 @@ export default function SignInForm() {
         <Button
           type="button"
           variant="outline"
-          className="w-full"
+          className="h-12 w-full gap-3 rounded-xl border-border bg-white text-sm font-semibold text-foreground shadow-sm shadow-foreground/5 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:bg-white hover:shadow-md hover:shadow-primary/10"
           disabled={pending}
           onClick={handleGoogleSignIn}
         >
-          Continue with Google
+          {pending ? (
+            <LoaderCircle aria-hidden="true" className="size-5 animate-spin" />
+          ) : (
+            <svg
+              aria-hidden="true"
+              className="size-5"
+              viewBox="0 0 48 48"
+              fill="none"
+            >
+              <path
+                fill="#4285F4"
+                d="M43.6 24.5c0-1.4-.1-2.8-.4-4.1H24v7.8h11c-.5 2.5-2 4.6-4.2 6.1v5h6.8c4-3.7 6-9.1 6-14.8Z"
+              />
+              <path
+                fill="#34A853"
+                d="M24 44c5.5 0 10.1-1.8 13.5-4.8l-6.8-5.3c-1.9 1.3-4.2 2-6.7 2-5.2 0-9.6-3.5-11.2-8.2H5.8v5.5C9.2 39.6 16 44 24 44Z"
+              />
+              <path
+                fill="#FBBC05"
+                d="M12.8 27.7a12 12 0 0 1 0-7.4v-5.5H5.8a20 20 0 0 0 0 18.4l7-5.5Z"
+              />
+              <path
+                fill="#EA4335"
+                d="M24 12.1c3 0 5.7 1 7.8 3.1l5.8-5.8C34.1 6 29.5 4 24 4 16 4 9.2 8.4 5.8 14.8l7 5.5c1.6-4.7 6-8.2 11.2-8.2Z"
+              />
+            </svg>
+          )}
+          {pending ? "Connecting to Google..." : "Continue with Google"}
         </Button>
 
         <p className="text-center text-sm text-muted-foreground">
