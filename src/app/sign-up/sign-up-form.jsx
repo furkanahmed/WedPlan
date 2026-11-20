@@ -301,6 +301,17 @@ export default function SignUpForm({ role }) {
             Sign in
           </Link>
         </p>
+        {role === "customer" ? (
+          <p className="text-center text-sm text-muted-foreground">
+            Are you a vendor?{" "}
+            <Link
+              href="/sign-up/vendor"
+              className="font-medium text-primary underline-offset-4 hover:underline"
+            >
+              Sign up as a vendor
+            </Link>
+          </p>
+        ) : null}
       </CardContent>
     </Card>
   );
