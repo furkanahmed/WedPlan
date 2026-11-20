@@ -22,6 +22,7 @@ export default function Home() {
               inspiration.
             </p>
             <Button
+              nativeButton={false}
               size="lg"
               className="mt-9 h-12 rounded-full px-6"
               render={
@@ -58,6 +59,7 @@ export default function Home() {
             </p>
           </div>
           <Button
+            nativeButton={false}
             variant="outline"
             className="rounded-full border-primary text-primary hover:bg-primary/5"
             render={<Link href="/services">Browse Services</Link>}

@@ -24,7 +24,10 @@ export default function NotFound() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Button render={<Link href="/">Back to WedPlan</Link>} />
+          <Button
+            nativeButton={false}
+            render={<Link href="/">Back to WedPlan</Link>}
+          />
         </CardContent>
       </Card>
     </main>
