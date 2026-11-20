@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -72,20 +73,21 @@ function ProfileMenu({ user, dashboardPath, onSignOut }) {
         <ChevronDown aria-hidden="true" className="size-4 shrink-0" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel className="truncate">
-          {user.name || user.email}
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem render={<Link href={dashboardPath} />}>
-          <LayoutDashboard aria-hidden="true" />
-          Dashboard
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          render={<Link href={`${dashboardPath}/profile`} />}
-        >
-          <Settings aria-hidden="true" />
-          Profile Settings
-        </DropdownMenuItem>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="truncate">
+            {user.name || user.email}
+          </DropdownMenuLabel>
+          <DropdownMenuItem render={<Link href={dashboardPath} />}>
+            <LayoutDashboard aria-hidden="true" />
+            Dashboard
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            render={<Link href={`${dashboardPath}/profile`} />}
+          >
+            <Settings aria-hidden="true" />
+            Profile Settings
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={onSignOut}>
           <LogOut aria-hidden="true" />
