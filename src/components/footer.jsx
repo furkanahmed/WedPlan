@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Facebook, Heart, Instagram, Mail } from "lucide-react";
+import { Heart, Mail, Share2 } from "lucide-react";
 
 const navigationLinks = [
   { href: "/", label: "Home" },
@@ -12,9 +12,9 @@ const socialLinks = [
   {
     href: "https://www.instagram.com/",
     label: "Instagram",
-    icon: Instagram,
+    icon: Share2,
   },
-  { href: "https://www.facebook.com/", label: "Facebook", icon: Facebook },
+  { href: "https://www.facebook.com/", label: "Facebook", icon: Share2 },
 ];
 
 export default function Footer() {
@@ -76,9 +76,10 @@ export default function Footer() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={label}
-                className="rounded-full border border-background/20 p-2 text-background/75 transition-colors hover:border-accent hover:text-background"
+                className="inline-flex items-center gap-2 rounded-full border border-background/20 px-3 py-2 text-sm text-background/75 transition-colors hover:border-accent hover:text-background"
               >
                 <Icon aria-hidden="true" className="size-4" />
+                <span>{label}</span>
               </a>
             ))}
           </div>
