@@ -17,7 +17,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Sheet,
   SheetContent,
@@ -100,7 +99,7 @@ function ProfileMenu({ user, dashboardPath, onSignOut }) {
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session } = authClient.useSession();
   const user = session?.user ?? null;
   const dashboardPath = getDashboardPath(user?.role);
 
@@ -152,12 +151,7 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          {isPending ? (
-            <>
-              <Skeleton aria-hidden="true" className="h-8 w-[4.5rem] rounded-lg" />
-              <Skeleton aria-hidden="true" className="h-8 w-[4.5rem] rounded-lg" />
-            </>
-          ) : user ? (
+          {user ? (
             <ProfileMenu
               user={user}
               dashboardPath={dashboardPath}
@@ -209,18 +203,7 @@ export default function Navbar() {
                   {link.label}
                 </Link>
               ))}
-              {isPending ? (
-                <>
-                  <Skeleton
-                    aria-hidden="true"
-                    className="my-1 h-10 w-full rounded-md"
-                  />
-                  <Skeleton
-                    aria-hidden="true"
-                    className="my-1 h-10 w-full rounded-md"
-                  />
-                </>
-              ) : user ? (
+              {user ? (
                 <>
                   <div className="flex items-center gap-3 border-b border-border px-3 py-4">
                     <ProfileAvatar user={user} />
