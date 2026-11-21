@@ -1,6 +1,6 @@
 import { authClient } from "@/lib/auth-client";
 
-async function fetchAuthenticatedApi(path, { method = "GET", body, signal } = {}) {
+export async function fetchAuthenticatedApi(path, { method = "GET", body, signal } = {}) {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   if (!apiUrl) {
     throw new Error("NEXT_PUBLIC_API_URL must be configured to load account data.");
