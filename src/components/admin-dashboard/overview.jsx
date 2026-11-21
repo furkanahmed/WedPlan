@@ -22,11 +22,11 @@ import { fetchAdminOverview } from "@/lib/admin-api";
 
 const overviewCards = [
   { key: "totalUsers", label: "Total users", icon: UsersRound },
-  { key: "vendors", label: "Vendors", icon: BriefcaseBusiness },
-  { key: "customers", label: "Customers", icon: UserRoundCheck },
+  { key: "totalVendors", label: "Vendors", icon: BriefcaseBusiness },
+  { key: "totalCustomers", label: "Customers", icon: UserRoundCheck },
   { key: "totalServices", label: "Services", icon: Layers3 },
   { key: "pendingServices", label: "Pending services", icon: Clock3 },
-  { key: "transactions", label: "Transactions", icon: CreditCard },
+  { key: "totalTransactions", label: "Transactions", icon: CreditCard },
 ];
 
 export default function AdminOverview() {

@@ -109,6 +109,44 @@ export async function fetchVendorOverview({ signal } = {}) {
   return overview;
 }
 
+export async function fetchPaymentSubscription({ signal } = {}) {
+  const subscription = await fetchAuthenticatedApi("/api/v1/payments/subscription", {
+    signal,
+  });
+  if (
+    !subscription ||
+    !["free", "premium"].includes(subscription.currentPlan) ||
+    typeof subscription.canManageSubscription !== "boolean" ||
+    (subscription.subscriptionExpiresAt !== null &&
+      typeof subscription.subscriptionExpiresAt !== "string")
+  ) {
+    throw new Error("The subscription server returned invalid plan data.");
+  }
+  return subscription;
+}
+
+export async function createPremiumCheckoutSession({ signal } = {}) {
+  const session = await fetchAuthenticatedApi("/api/v1/payments/checkout", {
+    method: "POST",
+    signal,
+  });
+  if (!session || typeof session.url !== "string" || !session.url) {
+    throw new Error("The payment server returned an invalid Checkout URL.");
+  }
+  return session;
+}
+
+export async function createSubscriptionPortalSession({ signal } = {}) {
+  const session = await fetchAuthenticatedApi("/api/v1/payments/portal", {
+    method: "POST",
+    signal,
+  });
+  if (!session || typeof session.url !== "string" || !session.url) {
+    throw new Error("The payment server returned an invalid Customer Portal URL.");
+  }
+  return session;
+}
+
 export async function fetchVendorServices({ signal } = {}) {
   const services = await fetchAuthenticatedApi("/api/v1/vendor/services", { signal });
   if (!Array.isArray(services)) {

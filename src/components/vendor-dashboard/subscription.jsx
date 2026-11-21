@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowRight, Crown, Layers3 } from "lucide-react";
+import { ArrowRight, Crown, Layers3, LoaderCircle } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,7 +13,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { fetchVendorOverview } from "@/lib/api";
+import {
+  createPremiumCheckoutSession,
+  createSubscriptionPortalSession,
+  fetchPaymentSubscription,
+  fetchVendorOverview,
+} from "@/lib/api";
 import { FREE_ACTIVE_SERVICE_LIMIT } from "@/lib/vendor-plans";
 
 function SubscriptionSkeleton() {
@@ -43,15 +49,21 @@ function SubscriptionSkeleton() {
 
 export default function VendorSubscription() {
   const [overview, setOverview] = useState(null);
+  const [subscription, setSubscription] = useState(null);
   const [status, setStatus] = useState("loading");
   const [errorMessage, setErrorMessage] = useState("");
   const [attempt, setAttempt] = useState(0);
+  const [action, setAction] = useState("");
 
   useEffect(() => {
     const controller = new AbortController();
-    fetchVendorOverview({ signal: controller.signal })
-      .then((result) => {
-        setOverview(result);
+    Promise.all([
+      fetchVendorOverview({ signal: controller.signal }),
+      fetchPaymentSubscription({ signal: controller.signal }),
+    ])
+      .then(([overviewResult, subscriptionResult]) => {
+        setOverview(overviewResult);
+        setSubscription(subscriptionResult);
         setStatus("success");
       })
       .catch((error) => {
@@ -66,12 +78,40 @@ export default function VendorSubscription() {
     return () => controller.abort();
   }, [attempt]);
 
-  const isPremium = overview?.currentPlan === "premium";
+  const isPremium = subscription?.currentPlan === "premium";
   const activeServiceCount = overview?.activeServices ?? 0;
   const usagePercent = Math.min(
     100,
     (activeServiceCount / FREE_ACTIVE_SERVICE_LIMIT) * 100,
   );
+
+  async function startCheckout() {
+    setAction("checkout");
+    try {
+      const session = await createPremiumCheckoutSession();
+      window.location.assign(session.url);
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Unable to start Premium checkout.",
+      );
+      setAction("");
+    }
+  }
+
+  async function openPortal() {
+    setAction("portal");
+    try {
+      const session = await createSubscriptionPortalSession();
+      window.location.assign(session.url);
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Unable to open subscription management.",
+      );
+      setAction("");
+    }
+  }
 
   return (
     <section className="space-y-7" aria-labelledby="vendor-subscription-heading">
@@ -108,17 +148,62 @@ export default function VendorSubscription() {
                     {isPremium ? "Premium" : "Free"}
                   </CardTitle>
                 </div>
+                {isPremium ? (
+                  <span className="inline-flex w-fit items-center gap-1 rounded-full bg-accent/20 px-3 py-1 text-sm font-medium text-foreground">
+                    <Crown aria-hidden="true" className="size-4" />
+                    Premium Vendor
+                  </span>
+                ) : null}
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-sm text-muted-foreground">
                   {isPremium
                     ? "Your active Premium plan removes the active-service cap."
-                    : `Your Free plan allows up to ${FREE_ACTIVE_SERVICE_LIMIT} active services.`}
+                    : `Upgrade for $9/month and remove the ${FREE_ACTIVE_SERVICE_LIMIT}-service cap.`}
                 </p>
-                <Button variant="outline" render={<Link href="/dashboard/vendor/services" />}>
-                  Manage services
-                  <ArrowRight aria-hidden="true" />
-                </Button>
+                <div className="flex flex-wrap gap-2">
+                  {!isPremium ? (
+                    <Button onClick={startCheckout} disabled={Boolean(action)}>
+                      {action === "checkout" ? (
+                        <LoaderCircle
+                          aria-hidden="true"
+                          className="animate-spin"
+                        />
+                      ) : (
+                        <Crown aria-hidden="true" />
+                      )}
+                      Subscribe for $9/month
+                    </Button>
+                  ) : null}
+                  {subscription?.canManageSubscription ? (
+                    <Button
+                      variant="outline"
+                      onClick={openPortal}
+                      disabled={Boolean(action)}
+                    >
+                      {action === "portal" ? (
+                        <LoaderCircle
+                          aria-hidden="true"
+                          className="animate-spin"
+                        />
+                      ) : null}
+                      Manage Subscription
+                    </Button>
+                  ) : null}
+                  <Button
+                    variant="outline"
+                    render={<Link href="/dashboard/vendor/services" />}
+                  >
+                    Manage services
+                    <ArrowRight aria-hidden="true" />
+                  </Button>
+                </div>
+                {subscription?.subscriptionExpiresAt ? (
+                  <p className="text-sm text-muted-foreground">
+                    Current period ends{" "}
+                    {new Date(subscription.subscriptionExpiresAt).toLocaleDateString()}.
+                  </p>
+                ) : null}
               </CardContent>
             </Card>
 
@@ -168,7 +253,8 @@ export default function VendorSubscription() {
             role="note"
             className="rounded-xl border border-border bg-muted/40 px-4 py-4 text-sm text-muted-foreground"
           >
-            Plan upgrades and billing are not available from the dashboard yet.
+            Stripe securely processes subscription payments. Your Premium status
+            updates after Stripe confirms the payment.
           </div>
         </>
       ) : null}

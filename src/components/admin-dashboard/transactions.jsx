@@ -39,6 +39,27 @@ function formatValue(value, fallback = "—") {
   return fallback;
 }
 
+function formatAmount(amount, currency) {
+  if (
+    typeof amount !== "number" ||
+    !Number.isFinite(amount) ||
+    typeof currency !== "string"
+  ) {
+    return "Not recorded";
+  }
+
+  try {
+    const formatter = new Intl.NumberFormat(undefined, {
+      style: "currency",
+      currency: currency.toUpperCase(),
+    });
+    const fractionDigits = formatter.resolvedOptions().maximumFractionDigits;
+    return formatter.format(amount / 10 ** fractionDigits);
+  } catch {
+    return `${amount} ${currency.toUpperCase()}`;
+  }
+}
+
 export default function AdminTransactions() {
   const [transactions, setTransactions] = useState([]);
   const [total, setTotal] = useState(0);
@@ -73,7 +94,7 @@ export default function AdminTransactions() {
           Transactions
         </h1>
         <p className="max-w-2xl text-muted-foreground">
-          Review recorded transaction summaries. This view does not change payment records.
+          Review recorded subscription payments. This view does not change payment records.
         </p>
       </header>
 
@@ -112,24 +133,29 @@ export default function AdminTransactions() {
                     <div>
                       <dt className="text-muted-foreground">Amount</dt>
                       <dd className="font-semibold">
-                        {formatValue(transaction.amount, "Not recorded")}{" "}
-                        {formatValue(transaction.currency, "")}
+                        {formatAmount(transaction.amount, transaction.currency)}
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-muted-foreground">Type</dt>
-                      <dd className="font-medium">{formatValue(transaction.type)}</dd>
+                      <dt className="text-muted-foreground">Plan</dt>
+                      <dd className="font-medium">{formatValue(transaction.plan)}</dd>
                     </div>
                     <div>
-                      <dt className="text-muted-foreground">Customer ID</dt>
+                      <dt className="text-muted-foreground">Vendor ID</dt>
                       <dd className="break-all font-medium">
-                        {getId(transaction.customerId)}
+                        {getId(transaction.vendorId)}
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-muted-foreground">Related record</dt>
+                      <dt className="text-muted-foreground">Stripe Checkout session</dt>
                       <dd className="break-all font-medium">
-                        {getId(transaction.bookingId || transaction.serviceId)}
+                        {formatValue(transaction.stripeSessionId)}
+                      </dd>
+                    </div>
+                    <div className="sm:col-span-2">
+                      <dt className="text-muted-foreground">Stripe subscription</dt>
+                      <dd className="break-all font-medium">
+                        {formatValue(transaction.stripeSubscriptionId)}
                       </dd>
                     </div>
                   </dl>

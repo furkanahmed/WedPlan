@@ -34,11 +34,11 @@ export async function fetchAdminOverview({ signal } = {}) {
   const overview = await fetchAuthenticatedApi("/api/v1/admin/overview", { signal });
   const countFields = [
     "totalUsers",
-    "vendors",
-    "customers",
+    "totalVendors",
+    "totalCustomers",
     "totalServices",
     "pendingServices",
-    "transactions",
+    "totalTransactions",
   ];
   if (
     !overview ||
