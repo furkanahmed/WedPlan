@@ -22,8 +22,7 @@ import {
   updateVendorService,
 } from "@/lib/api";
 import { formatTaka } from "@/lib/currency";
-
-const FREE_ACTIVE_SERVICE_LIMIT = 3;
+import { FREE_ACTIVE_SERVICE_LIMIT } from "@/lib/vendor-plans";
 
 function ServicesSkeleton() {
   return (

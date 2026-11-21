@@ -1,0 +1,1 @@
+export const FREE_ACTIVE_SERVICE_LIMIT = 3;
