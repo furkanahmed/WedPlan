@@ -51,7 +51,7 @@ Next.js (JS), ShadCN, Tailwind, Framer Motion, Better Auth (in Next.js), Express
 - Password field shows a live checklist for min 6 characters, 1 uppercase, and 1 lowercase; each met rule turns green, submit stays disabled until all pass, and password rules are validated again on the server.
 - Vendor sign-up requires Business Name, with server-side validation.
 - After Sign In, redirect back to the originally requested page.
-- Google sign-up: role = `customer` (PENDING OWNER CONFIRMATION, see §9).
+- Google sign-up always creates role `customer`.
 - Profile update must accept only `name`, `image`, and `businessName`; server ignores `role`, `isBlocked`, `subscriptionPlan`, `subscriptionExpiresAt` (also block them via `databaseHooks.user.update.before`).
 - Admin: created only by `scripts/seed-admin.js` reading `ADMIN_EMAIL` / `ADMIN_PASSWORD` from env. Idempotent; run it against the live production database before submission.
 - Admin block/unblock and Stripe webhook updates use direct MongoDB driver on the server.
@@ -120,10 +120,11 @@ Client: NEXT_PUBLIC_APP_URL, NEXT_PUBLIC_API_URL, BETTER_AUTH_SECRET, BETTER_AUT
 CORS: exact `CLIENT_ORIGIN`, `credentials: true`, never `*`.
 
 ## 9. Open items (do not assume; ask owner)
-- Google sign-up role: default `customer` (option A) vs role picker before Google (option B). Recommended: A.
 - Does a pending service count toward the free 3 limit? Current default: count only `isActive: true`.
 - Requirement video (B14-A9_category-004.mp4) not seen. Owner to note any extra instructions.
 - Premium price/duration: owner's choice (e.g. $9/month), document in README.
+- Development sample listings and vendor names are fictional; README and seed source document this clearly.
+- Stock photos are illustrative Pexels images and must not be presented as real vendor portfolios.
 
 ## 10. Milestones
 1 Setup both repos, .gitignore, .env.example, Mongo connection
@@ -139,7 +140,20 @@ CORS: exact `CLIENT_ORIGIN`, `credentials: true`, never `*`.
    - Status: **Done**
 4 Auth (sign up/in, Google, role rules, admin seed, redirects, route protection)
    - 4A: **Done** (Better Auth foundation, commit c558290)
+   - 4B: **Done** (email/password and Google auth flows, role/password rules, redirects, route protection, profile image upload, and auth form UX)
+   - Seed script added: `backend/scripts/seed-admin.js` (`npm run seed-admin`)
+   - Pending: run and verify the seed against the production database
+   - Status: **In progress** until the production admin account is verified
 5 Public site (home, browse, search/filter/sort, details)
+   - [x] Hero with one "Explore Wedding Services" CTA and Browse link
+   - [x] Featured approved+active services from `GET /api/v1/services`
+   - [x] Six category cards linked to preselected Browse categories
+   - [x] Loading, empty, error and broken-image fallback states
+   - [x] Why Choose WedPlan? and How WedPlan Works sections
+   - [x] Framer Motion and 375/768/1280px responsive verification
+   - [x] Public vendor enrichment, BDT formatting, and details auth redirect
+   - [x] Development seed with fictional vendors and approved+active sample services
+   - Status: **Done**
 6 Vendor dashboard + service CRUD + limits + bookings
 7 Customer dashboard + booking + cancel + profile
 8 Admin dashboard

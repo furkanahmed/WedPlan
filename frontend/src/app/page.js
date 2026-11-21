@@ -1,69 +1,194 @@
 import Image from "next/image";
+import Link from "next/link";
+import {
+  ArrowRight,
+  Camera,
+  Check,
+  Flower2,
+  Heart,
+  MapPin,
+  Sparkles,
+  Shirt,
+  Utensils,
+} from "lucide-react";
+import HomeFeaturedServices from "@/components/home-featured-services";
+import Reveal from "@/components/reveal";
+import { WEDDING_CATEGORIES } from "@/lib/categories";
+
+const categoryIcons = [Camera, MapPin, Flower2, Utensils, Sparkles, Shirt];
+
+const benefits = [
+  "Discover trusted wedding professionals in one place",
+  "Compare services, prices, and locations with ease",
+  "Find a team that fits your vision and your budget",
+];
+
+const steps = [
+  {
+    number: "01",
+    title: "Explore",
+    description: "Browse wedding services and discover local professionals.",
+  },
+  {
+    number: "02",
+    title: "Choose",
+    description: "Compare details and find the services that feel right.",
+  },
+  {
+    number: "03",
+    title: "Celebrate",
+    description: "Bring your plans together and enjoy your special day.",
+  },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.js
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <main>
+      <section className="relative isolate overflow-hidden bg-background">
+        <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,#FFFDF9_0%,#FFFDF9_48%,rgba(255,253,249,0.2)_100%)]" />
+        <div className="mx-auto grid min-h-[min(42rem,calc(100vh-4rem))] max-w-7xl items-center gap-8 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-24">
+          <div className="relative z-10 max-w-2xl">
+            <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-white/80 px-4 py-2 text-sm font-medium text-secondary">
+              <Heart aria-hidden="true" className="size-4 fill-primary text-primary" />
+              Made for your forever
+            </p>
+            <h1 className="font-heading text-4xl leading-[1.08] font-semibold tracking-tight text-secondary sm:text-6xl">
+              Your day, your way.
+              <span className="mt-2 block text-primary">Let&apos;s plan it.</span>
+            </h1>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-foreground">
+              Find trusted wedding professionals and bring your celebration to
+              life, all in one place.
+            </p>
+            <Link
+              href="/services"
+              className="mt-9 inline-flex h-12 items-center justify-center rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground transition-colors hover:bg-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+              Explore Wedding Services
+              <ArrowRight aria-hidden="true" className="ml-2 size-4" />
+            </Link>
+          </div>
+          <div className="relative mx-auto aspect-[4/3] w-full max-w-xl overflow-hidden rounded-[2rem] sm:rounded-[3rem]">
             <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
+              src="/wedding-hero.svg"
+              alt=""
+              fill
+              loading="eager"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          </div>
         </div>
-      </main>
-    </div>
+      </section>
+
+      <HomeFeaturedServices />
+
+      <section className="border-y border-border bg-white/60 py-16 sm:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Reveal className="mx-auto mb-10 max-w-2xl text-center">
+            <p className="text-sm font-semibold tracking-wide text-primary uppercase">
+              Browse by category
+            </p>
+            <h2 className="mt-2 font-heading text-3xl font-semibold text-secondary sm:text-4xl">
+              Find the perfect fit
+            </h2>
+            <p className="mt-3 text-foreground">
+              Start with the services that matter most to your celebration.
+            </p>
+          </Reveal>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {WEDDING_CATEGORIES.map(({ name, slug }, index) => {
+              const Icon = categoryIcons[index];
+              return (
+                <Reveal key={slug}>
+                  <Link
+                    href={`/services?category=${encodeURIComponent(slug)}`}
+                    className="group flex h-full items-center gap-4 rounded-2xl border border-border bg-background p-5 transition-all hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg hover:shadow-secondary/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  >
+                    <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                      <Icon aria-hidden="true" className="size-6" />
+                    </span>
+                    <span className="flex-1">
+                      <span className="block font-heading text-lg font-semibold text-secondary">
+                        {name}
+                      </span>
+                      <span className="mt-1 inline-flex items-center text-sm text-muted-foreground group-hover:text-primary">
+                        Explore category
+                        <ArrowRight
+                          aria-hidden="true"
+                          className="ml-1 size-4"
+                        />
+                      </span>
+                    </span>
+                  </Link>
+                </Reveal>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 sm:py-20">
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 md:grid-cols-2 md:items-center lg:px-8">
+          <Reveal>
+            <p className="text-sm font-semibold tracking-wide text-primary uppercase">
+              Why WedPlan
+            </p>
+            <h2 className="mt-2 font-heading text-3xl font-semibold text-secondary sm:text-4xl">
+              Why Choose WedPlan?
+            </h2>
+            <p className="mt-4 max-w-xl leading-7 text-foreground">
+              Planning your wedding should feel exciting. WedPlan makes it
+              easier to discover the right people and services for your day.
+            </p>
+          </Reveal>
+          <div className="space-y-4">
+            {benefits.map((benefit) => (
+              <Reveal key={benefit}>
+                <div className="flex items-start gap-3 rounded-xl border border-border bg-white p-4">
+                  <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <Check aria-hidden="true" className="size-4" />
+                  </span>
+                  <p className="font-medium text-foreground">{benefit}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-secondary py-16 text-background sm:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Reveal className="mx-auto mb-10 max-w-2xl text-center">
+            <p className="text-sm font-semibold tracking-wide text-accent uppercase">
+              A simple start
+            </p>
+            <h2 className="mt-2 font-heading text-3xl font-semibold sm:text-4xl">
+              How WedPlan Works
+            </h2>
+            <p className="mt-3 text-background/80">
+              A few simple steps from inspiration to celebration.
+            </p>
+          </Reveal>
+          <div className="grid gap-5 md:grid-cols-3">
+            {steps.map((step) => (
+              <Reveal key={step.number}>
+                <article className="h-full rounded-2xl border border-background/15 bg-background/5 p-6">
+                  <span className="font-heading text-3xl font-semibold text-accent">
+                    {step.number}
+                  </span>
+                  <h3 className="mt-4 font-heading text-xl font-semibold">
+                    {step.title}
+                  </h3>
+                  <p className="mt-2 leading-6 text-background/80">
+                    {step.description}
+                  </p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }

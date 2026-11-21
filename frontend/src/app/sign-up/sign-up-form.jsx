@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { Check, Circle, LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
+import { uploadImageToImgBB } from "@/lib/image-upload";
 import { getSafeRedirectPath } from "@/lib/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,23 +17,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-
-async function uploadProfileImage(file) {
-  const formData = new FormData();
-  formData.append("image", file);
-
-  const response = await fetch("/api/upload", {
-    method: "POST",
-    body: formData,
-  });
-  const result = await response.json();
-
-  if (!response.ok || typeof result.url !== "string") {
-    throw new Error(result.error ?? "Image upload failed.");
-  }
-
-  return result.url;
-}
 
 const googleCustomerOnlyMessage =
   "Google sign-in is available to customer accounts only. Use email and password for this account.";
@@ -91,7 +75,7 @@ export default function SignUpForm({ role }) {
       let image;
       if (imageFile) {
         setUploadingImage(true);
-        image = await uploadProfileImage(imageFile);
+        image = await uploadImageToImgBB(imageFile);
         setUploadingImage(false);
       }
 
