@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import EmptyState from "@/components/empty-state";
 import ImageGallery from "@/components/image-gallery";
 import { Skeleton } from "@/components/ui/skeleton";
-import { fetchPublicService } from "@/lib/api";
+import { createBooking, fetchPublicService } from "@/lib/api";
 import { formatTaka } from "@/lib/currency";
 
 function ServiceDetailsLoading() {
@@ -33,6 +33,44 @@ function ServiceDetailsContent() {
   const [status, setStatus] = useState("loading");
   const [errorMessage, setErrorMessage] = useState("");
   const [attempt, setAttempt] = useState(0);
+  const [bookingForm, setBookingForm] = useState({
+    eventDate: "",
+    eventLocation: "",
+    message: "",
+  });
+  const [bookingStatus, setBookingStatus] = useState("idle");
+
+  function updateBookingField(event) {
+    const { name, value } = event.target;
+    setBookingForm((current) => ({ ...current, [name]: value }));
+  }
+
+  async function handleBookingSubmit(event) {
+    event.preventDefault();
+    setBookingStatus("submitting");
+    try {
+      await createBooking({
+        serviceId,
+        eventDate: bookingForm.eventDate,
+        eventLocation: bookingForm.eventLocation,
+        message: bookingForm.message,
+      });
+      setBookingForm({
+        eventDate: "",
+        eventLocation: "",
+        message: "",
+      });
+      setBookingStatus("submitted");
+      toast.success("Booking request sent.");
+    } catch (error) {
+      setBookingStatus("idle");
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Unable to send the booking request.",
+      );
+    }
+  }
 
   useEffect(() => {
     if (!serviceId) {
@@ -137,12 +175,7 @@ function ServiceDetailsContent() {
 
           <form
             className="mt-8 space-y-4 rounded-2xl border border-border bg-white p-5"
-            onSubmit={(event) => {
-              event.preventDefault();
-              toast.info(
-                "Booking requests are available after the customer booking milestone is completed.",
-              );
-            }}
+            onSubmit={handleBookingSubmit}
           >
             <h2 className="font-heading text-xl font-semibold text-secondary">
               Request this service
@@ -150,7 +183,10 @@ function ServiceDetailsContent() {
             <label className="block">
               <span className="mb-2 block text-sm font-medium">Event date</span>
               <input
+                name="eventDate"
                 type="date"
+                value={bookingForm.eventDate}
+                onChange={updateBookingField}
                 required
                 className="h-12 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
               />
@@ -158,7 +194,11 @@ function ServiceDetailsContent() {
             <label className="block">
               <span className="mb-2 block text-sm font-medium">Event location</span>
               <input
+                name="eventLocation"
                 type="text"
+                value={bookingForm.eventLocation}
+                onChange={updateBookingField}
+                maxLength={100}
                 required
                 placeholder="Venue or area"
                 className="h-12 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -167,6 +207,10 @@ function ServiceDetailsContent() {
             <label className="block">
               <span className="mb-2 block text-sm font-medium">Message</span>
               <textarea
+                name="message"
+                value={bookingForm.message}
+                onChange={updateBookingField}
+                maxLength={3000}
                 required
                 rows={4}
                 placeholder="Tell the vendor about your plan"
@@ -175,10 +219,13 @@ function ServiceDetailsContent() {
             </label>
             <button
               type="submit"
+              disabled={bookingStatus === "submitting"}
               className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 text-sm font-semibold text-primary-foreground"
             >
               <CalendarDays aria-hidden="true" className="size-4" />
-              Send booking request
+              {bookingStatus === "submitting"
+                ? "Sending..."
+                : "Send booking request"}
             </button>
           </form>
         </article>

@@ -52,7 +52,7 @@ export default function Home() {
               <Heart aria-hidden="true" className="size-4 fill-primary text-primary" />
               Made for your forever
             </p>
-            <h1 className="font-heading text-5xl leading-[1.08] font-semibold tracking-tight text-secondary sm:text-6xl">
+            <h1 className="font-heading text-4xl leading-[1.08] font-semibold tracking-tight text-secondary sm:text-6xl">
               Your day, your way.
               <span className="mt-2 block text-primary">Let&apos;s plan it.</span>
             </h1>
