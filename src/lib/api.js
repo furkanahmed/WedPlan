@@ -1,9 +1,9 @@
 import { authClient } from "@/lib/auth-client";
 
-async function fetchVendorApi(path, { method = "GET", body, signal } = {}) {
+async function fetchAuthenticatedApi(path, { method = "GET", body, signal } = {}) {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   if (!apiUrl) {
-    throw new Error("NEXT_PUBLIC_API_URL must be configured to load vendor data.");
+    throw new Error("NEXT_PUBLIC_API_URL must be configured to load account data.");
   }
 
   let url;
@@ -18,7 +18,7 @@ async function fetchVendorApi(path, { method = "GET", body, signal } = {}) {
     throw new Error(tokenError.message || "Unable to authenticate with the services server.");
   }
   if (typeof tokenData?.token !== "string" || !tokenData.token) {
-    throw new Error("A valid sign-in token is required to load vendor data.");
+    throw new Error("A valid sign-in token is required to load account data.");
   }
 
   const headers = {
@@ -38,14 +38,14 @@ async function fetchVendorApi(path, { method = "GET", body, signal } = {}) {
   try {
     result = await response.json();
   } catch {
-    throw new Error("The vendor server returned an invalid response.");
+    throw new Error("The account server returned an invalid response.");
   }
 
   if (!response.ok) {
     throw new Error(
       typeof result?.message === "string"
         ? result.message
-        : "Unable to complete the vendor request.",
+        : "Unable to complete the account request.",
     );
   }
 
@@ -94,7 +94,7 @@ export async function fetchPublicServices({ signal, ...filters } = {}) {
 }
 
 export async function fetchVendorOverview({ signal } = {}) {
-  const overview = await fetchVendorApi("/api/v1/vendor/overview", { signal });
+  const overview = await fetchAuthenticatedApi("/api/v1/vendor/overview", { signal });
   if (
     !overview ||
     !Number.isInteger(overview.totalServices) ||
@@ -110,7 +110,7 @@ export async function fetchVendorOverview({ signal } = {}) {
 }
 
 export async function fetchVendorServices({ signal } = {}) {
-  const services = await fetchVendorApi("/api/v1/vendor/services", { signal });
+  const services = await fetchAuthenticatedApi("/api/v1/vendor/services", { signal });
   if (!Array.isArray(services)) {
     throw new Error("The vendor services server returned an invalid service list.");
   }
@@ -118,7 +118,7 @@ export async function fetchVendorServices({ signal } = {}) {
 }
 
 export async function fetchVendorService(serviceId, { signal } = {}) {
-  const service = await fetchVendorApi(
+  const service = await fetchAuthenticatedApi(
     `/api/v1/vendor/services/${encodeURIComponent(serviceId)}`,
     { signal },
   );
@@ -129,7 +129,7 @@ export async function fetchVendorService(serviceId, { signal } = {}) {
 }
 
 export async function createVendorService(service, { signal } = {}) {
-  return fetchVendorApi("/api/v1/services", {
+  return fetchAuthenticatedApi("/api/v1/services", {
     method: "POST",
     body: service,
     signal,
@@ -137,7 +137,7 @@ export async function createVendorService(service, { signal } = {}) {
 }
 
 export async function updateVendorService(serviceId, service, { signal } = {}) {
-  return fetchVendorApi(`/api/v1/services/${encodeURIComponent(serviceId)}`, {
+  return fetchAuthenticatedApi(`/api/v1/services/${encodeURIComponent(serviceId)}`, {
     method: "PATCH",
     body: service,
     signal,
@@ -145,14 +145,14 @@ export async function updateVendorService(serviceId, service, { signal } = {}) {
 }
 
 export async function deleteVendorService(serviceId, { signal } = {}) {
-  return fetchVendorApi(`/api/v1/services/${encodeURIComponent(serviceId)}`, {
+  return fetchAuthenticatedApi(`/api/v1/services/${encodeURIComponent(serviceId)}`, {
     method: "DELETE",
     signal,
   });
 }
 
 export async function createBooking(booking, { signal } = {}) {
-  return fetchVendorApi("/api/v1/bookings", {
+  return fetchAuthenticatedApi("/api/v1/bookings", {
     method: "POST",
     body: booking,
     signal,
@@ -160,7 +160,7 @@ export async function createBooking(booking, { signal } = {}) {
 }
 
 export async function fetchVendorBookings({ signal } = {}) {
-  const bookings = await fetchVendorApi("/api/v1/bookings", { signal });
+  const bookings = await fetchAuthenticatedApi("/api/v1/bookings", { signal });
   if (!Array.isArray(bookings)) {
     throw new Error("The vendor bookings server returned an invalid booking list.");
   }
@@ -168,7 +168,7 @@ export async function fetchVendorBookings({ signal } = {}) {
 }
 
 export async function updateVendorBookingStatus(bookingId, status, { signal } = {}) {
-  return fetchVendorApi(
+  return fetchAuthenticatedApi(
     `/api/v1/bookings/${encodeURIComponent(bookingId)}/status`,
     {
       method: "PATCH",
@@ -176,6 +176,70 @@ export async function updateVendorBookingStatus(bookingId, status, { signal } = 
       signal,
     },
   );
+}
+
+export async function fetchCustomerOverview({ signal } = {}) {
+  const overview = await fetchAuthenticatedApi("/api/v1/customer/overview", {
+    signal,
+  });
+  if (
+    !overview ||
+    !Number.isInteger(overview.totalBookings) ||
+    !Number.isInteger(overview.pendingBookings) ||
+    !Number.isInteger(overview.acceptedBookings) ||
+    !Number.isInteger(overview.rejectedBookings)
+  ) {
+    throw new Error("The customer dashboard server returned invalid summary data.");
+  }
+  return overview;
+}
+
+export async function fetchCustomerBookings({ signal } = {}) {
+  const bookings = await fetchAuthenticatedApi("/api/v1/customer/bookings", {
+    signal,
+  });
+  if (!Array.isArray(bookings)) {
+    throw new Error("The customer server returned an invalid booking list.");
+  }
+  return bookings;
+}
+
+export async function cancelCustomerBooking(bookingId, { signal } = {}) {
+  return fetchAuthenticatedApi(
+    `/api/v1/customer/bookings/${encodeURIComponent(bookingId)}/cancel`,
+    { method: "PATCH", signal },
+  );
+}
+
+export async function fetchCustomerProfile({ signal } = {}) {
+  const profile = await fetchAuthenticatedApi("/api/v1/customer/profile", {
+    signal,
+  });
+  if (
+    !profile ||
+    typeof profile.name !== "string" ||
+    typeof profile.email !== "string" ||
+    (profile.image !== null && typeof profile.image !== "string")
+  ) {
+    throw new Error("The customer profile server returned invalid profile data.");
+  }
+  return profile;
+}
+
+export async function updateCustomerProfile(profile, { signal } = {}) {
+  const updatedProfile = await fetchAuthenticatedApi(
+    "/api/v1/customer/profile",
+    { method: "PATCH", body: profile, signal },
+  );
+  if (
+    !updatedProfile ||
+    typeof updatedProfile.name !== "string" ||
+    typeof updatedProfile.email !== "string" ||
+    (updatedProfile.image !== null && typeof updatedProfile.image !== "string")
+  ) {
+    throw new Error("The customer profile server returned invalid profile data.");
+  }
+  return updatedProfile;
 }
 
 export async function fetchPublicService(serviceId, { signal } = {}) {
