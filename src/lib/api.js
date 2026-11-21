@@ -128,6 +128,37 @@ export async function fetchVendorService(serviceId, { signal } = {}) {
   return service;
 }
 
+export async function fetchVendorProfile({ signal } = {}) {
+  const profile = await fetchAuthenticatedApi("/api/v1/vendor/profile", { signal });
+  if (
+    !profile ||
+    typeof profile.name !== "string" ||
+    typeof profile.email !== "string" ||
+    typeof profile.businessName !== "string" ||
+    (profile.image !== null && typeof profile.image !== "string")
+  ) {
+    throw new Error("The vendor profile server returned invalid profile data.");
+  }
+  return profile;
+}
+
+export async function updateVendorProfile(profile, { signal } = {}) {
+  const updatedProfile = await fetchAuthenticatedApi(
+    "/api/v1/vendor/profile",
+    { method: "PATCH", body: profile, signal },
+  );
+  if (
+    !updatedProfile ||
+    typeof updatedProfile.name !== "string" ||
+    typeof updatedProfile.email !== "string" ||
+    typeof updatedProfile.businessName !== "string" ||
+    (updatedProfile.image !== null && typeof updatedProfile.image !== "string")
+  ) {
+    throw new Error("The vendor profile server returned invalid profile data.");
+  }
+  return updatedProfile;
+}
+
 export async function createVendorService(service, { signal } = {}) {
   return fetchAuthenticatedApi("/api/v1/services", {
     method: "POST",
