@@ -62,21 +62,27 @@ export default function Home() {
             </p>
             <Link
               href="/services"
-              className="mt-9 inline-flex h-12 items-center justify-center rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground transition-colors hover:bg-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              className="mt-9 inline-flex h-12 items-center justify-center rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:-translate-y-0.5 hover:bg-secondary hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
             >
               Explore Wedding Services
               <ArrowRight aria-hidden="true" className="ml-2 size-4" />
             </Link>
           </div>
-          <div className="relative mx-auto aspect-[4/3] w-full max-w-xl overflow-hidden rounded-[2rem] sm:rounded-[3rem]">
-            <Image
-              src="/wedding-hero.svg"
-              alt=""
-              fill
-              loading="eager"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover"
+          <div className="relative mx-auto w-full max-w-xl">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -inset-6 -z-10 rounded-full bg-primary/10 blur-3xl"
             />
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[2rem] ring-1 ring-border/70 shadow-2xl shadow-primary/10 sm:rounded-[3rem]">
+              <Image
+                src="/wedding-hero.svg"
+                alt=""
+                fill
+                loading="eager"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
+              />
+            </div>
           </div>
         </div>
       </section>
