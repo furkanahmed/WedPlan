@@ -2,11 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
+  BadgeCheck,
+  CalendarCheck,
   Camera,
   Check,
   Flower2,
   Heart,
+  Lock,
   MapPin,
+  ShieldCheck,
   Sparkles,
   Shirt,
   Utensils,
@@ -44,29 +48,50 @@ const steps = [
 export default function Home() {
   return (
     <main>
-      <section className="relative isolate overflow-hidden bg-background">
-        <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,#FFFDF9_0%,#FFFDF9_48%,rgba(255,253,249,0.2)_100%)]" />
-        <div className="mx-auto grid min-h-[min(42rem,calc(100vh-4rem))] max-w-7xl items-center gap-8 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-24">
+      <section className="relative isolate overflow-hidden bg-linear-to-br from-background to-primary/10">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-32 -left-32 -z-10 size-80 rounded-full bg-primary/15 blur-3xl"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-32 bottom-0 -z-10 size-96 rounded-full bg-accent/20 blur-3xl"
+        />
+        <div className="mx-auto grid min-h-[min(42rem,calc(100vh-4rem))] max-w-7xl items-center gap-10 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:px-8 lg:py-24">
           <div className="relative z-10 max-w-2xl">
-            <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-white/80 px-4 py-2 text-sm font-medium text-secondary">
+            <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-white/80 px-4 py-2 text-sm font-medium text-secondary shadow-sm">
               <Heart aria-hidden="true" className="size-4 fill-primary text-primary" />
               Made for your forever
             </p>
-            <h1 className="font-heading text-4xl leading-[1.08] font-semibold tracking-tight text-secondary sm:text-6xl">
+            <h1 className="font-heading text-5xl leading-[1.05] font-semibold tracking-tight text-secondary md:text-6xl lg:text-7xl">
               Your day, your way.
               <span className="mt-2 block text-primary">Let&apos;s plan it.</span>
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-foreground">
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-foreground">
               Find trusted wedding professionals and bring your celebration to
               life, all in one place.
             </p>
             <Link
               href="/services"
-              className="mt-9 inline-flex h-12 items-center justify-center rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:-translate-y-0.5 hover:bg-secondary hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              className="mt-8 inline-flex h-12 items-center justify-center rounded-full bg-primary px-8 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-secondary hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
             >
               Explore Wedding Services
               <ArrowRight aria-hidden="true" className="ml-2 size-4" />
             </Link>
+            <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-muted-foreground">
+              <li className="inline-flex items-center gap-2">
+                <Check aria-hidden="true" className="size-4 text-primary" />
+                Approved services only
+              </li>
+              <li className="inline-flex items-center gap-2">
+                <CalendarCheck aria-hidden="true" className="size-4 text-primary" />
+                Easy booking requests
+              </li>
+              <li className="inline-flex items-center gap-2">
+                <Lock aria-hidden="true" className="size-4 text-primary" />
+                Secure Stripe payments
+              </li>
+            </ul>
           </div>
           <div className="relative mx-auto w-full max-w-xl">
             <div
@@ -82,6 +107,14 @@ export default function Home() {
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover"
               />
+            </div>
+            <div className="absolute -left-4 top-6 hidden items-center gap-2 rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm font-medium text-secondary shadow-lg backdrop-blur md:flex">
+              <BadgeCheck aria-hidden="true" className="size-5 text-primary" />
+              Verified vendors
+            </div>
+            <div className="absolute -right-4 bottom-6 hidden items-center gap-2 rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm font-medium text-secondary shadow-lg backdrop-blur md:flex">
+              <ShieldCheck aria-hidden="true" className="size-5 text-primary" />
+              Secure booking requests
             </div>
           </div>
         </div>
