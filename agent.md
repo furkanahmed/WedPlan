@@ -166,3 +166,6 @@ Client: `src/app/{api/auth,(auth),dashboard}`, `src/components`, `src/lib/{auth-
 
 ## 12. Verify during implementation
 Better Auth hook signatures and provider detection; JWT `iss`/`aud`; Stripe `current_period_end` path for installed SDK.
+
+## Commit messages
+- Do not append co-author or attribution trailers unless the repository owner explicitly requests them.
