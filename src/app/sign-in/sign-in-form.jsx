@@ -146,8 +146,19 @@ export default function SignInForm() {
               {errorMessage}
             </p>
           ) : null}
-          <Button type="submit" className="w-full" disabled={pending}>
-            {pending ? "Signing in..." : "Sign In"}
+          <Button
+            type="submit"
+            className="h-12 w-full rounded-full bg-primary font-semibold shadow-md shadow-primary/25 transition-all hover:bg-secondary hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:opacity-70 disabled:shadow-none"
+            disabled={pending}
+          >
+            {pending ? (
+              <>
+                <LoaderCircle aria-hidden="true" className="size-4 animate-spin" />
+                Signing in...
+              </>
+            ) : (
+              "Sign In"
+            )}
           </Button>
         </form>
 
