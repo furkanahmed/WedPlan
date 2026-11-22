@@ -63,7 +63,7 @@ https://wed-plan-7c5o.vercel.app
 
 - Client: https://github.com/furkanahmed/WedPlan
 - Server: https://github.com/furkanahmed/wedplan-server
-- Live API: https://wedplan-server-liart.vercel.app
+- - Live API: https://wedplan-server-liart.vercel.app (example endpoint: https://wedplan-server-liart.vercel.app/api/v1/services)
 
 ## Installation and Local Development
 
