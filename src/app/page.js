@@ -48,14 +48,14 @@ const steps = [
 export default function Home() {
   return (
     <main>
-      <section className="relative isolate overflow-hidden bg-linear-to-br from-background to-primary/10">
+      <section className="relative isolate overflow-hidden bg-linear-to-b from-background via-background to-primary/5">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -top-32 -left-32 -z-10 size-80 rounded-full bg-primary/15 blur-3xl"
+          className="pointer-events-none absolute -top-24 -left-24 -z-10 size-72 rounded-full bg-primary/10 blur-3xl"
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -right-32 bottom-0 -z-10 size-96 rounded-full bg-accent/20 blur-3xl"
+          className="pointer-events-none absolute -right-24 top-1/4 -z-10 size-80 rounded-full bg-accent/10 blur-3xl"
         />
         <div className="mx-auto grid min-h-[min(42rem,calc(100vh-4rem))] max-w-7xl items-center gap-10 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:px-8 lg:py-24">
           <div className="relative z-10 max-w-2xl">
@@ -78,17 +78,20 @@ export default function Home() {
               Explore Wedding Services
               <ArrowRight aria-hidden="true" className="ml-2 size-4" />
             </Link>
-            <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-muted-foreground">
+            <ul className="mt-8 flex flex-wrap gap-x-5 gap-y-2.5 text-sm text-muted-foreground">
               <li className="inline-flex items-center gap-2">
-                <Check aria-hidden="true" className="size-4 text-primary" />
+                <Check aria-hidden="true" className="size-4 shrink-0 text-primary" />
                 Approved services only
               </li>
               <li className="inline-flex items-center gap-2">
-                <CalendarCheck aria-hidden="true" className="size-4 text-primary" />
+                <CalendarCheck
+                  aria-hidden="true"
+                  className="size-4 shrink-0 text-primary"
+                />
                 Easy booking requests
               </li>
               <li className="inline-flex items-center gap-2">
-                <Lock aria-hidden="true" className="size-4 text-primary" />
+                <Lock aria-hidden="true" className="size-4 shrink-0 text-primary" />
                 Secure Stripe payments
               </li>
             </ul>
@@ -96,24 +99,52 @@ export default function Home() {
           <div className="relative mx-auto w-full max-w-xl">
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute -inset-6 -z-10 rounded-full bg-primary/10 blur-3xl"
+              className="pointer-events-none absolute -inset-8 -z-10 rounded-[3rem] bg-primary/10 blur-3xl"
             />
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[2rem] ring-1 ring-border/70 shadow-2xl shadow-primary/10 sm:rounded-[3rem]">
-              <Image
-                src="/wedding-hero.svg"
-                alt=""
-                fill
-                loading="eager"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
-              />
+            <div className="relative rounded-[2rem] border border-white/70 bg-white/70 p-2 shadow-2xl shadow-primary/15 ring-1 ring-border/50 backdrop-blur sm:p-2.5">
+              <div className="grid aspect-[4/3] grid-cols-[1.6fr_1fr] grid-rows-2 gap-2 sm:gap-2.5">
+                <div className="relative row-span-2 overflow-hidden rounded-[1.5rem] ring-1 ring-black/5">
+                  <Image
+                    src="/hero/couple.webp"
+                    alt="Bride and groom embracing at their wedding"
+                    fill
+                    preload
+                    sizes="(max-width: 1024px) 60vw, 30vw"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="relative overflow-hidden rounded-[1.1rem] ring-1 ring-black/5">
+                  <Image
+                    src="/hero/venue.webp"
+                    alt="Bride and groom walking under a decorated wedding arch"
+                    fill
+                    loading="lazy"
+                    sizes="(max-width: 1024px) 40vw, 20vw"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="relative overflow-hidden rounded-[1.1rem] ring-1 ring-black/5">
+                  <Image
+                    src="/hero/rings.webp"
+                    alt="Wedding rings and bouquet detail"
+                    fill
+                    loading="lazy"
+                    sizes="(max-width: 1024px) 40vw, 20vw"
+                    className="object-cover"
+                  />
+                </div>
+              </div>
             </div>
-            <div className="absolute -left-4 top-6 hidden items-center gap-2 rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm font-medium text-secondary shadow-lg backdrop-blur md:flex">
-              <BadgeCheck aria-hidden="true" className="size-5 text-primary" />
+            <div className="absolute -left-4 top-8 hidden items-center gap-2 rounded-full border border-white/70 bg-white/85 px-3 py-2 text-xs font-semibold text-secondary shadow-lg shadow-primary/10 backdrop-blur-md md:flex">
+              <span className="flex size-6 items-center justify-center rounded-full bg-primary/10">
+                <BadgeCheck aria-hidden="true" className="size-4 text-primary" />
+              </span>
               Verified vendors
             </div>
-            <div className="absolute -right-4 bottom-6 hidden items-center gap-2 rounded-2xl border border-border bg-white/80 px-4 py-3 text-sm font-medium text-secondary shadow-lg backdrop-blur md:flex">
-              <ShieldCheck aria-hidden="true" className="size-5 text-primary" />
+            <div className="absolute -right-4 bottom-8 hidden items-center gap-2 rounded-full border border-white/70 bg-white/85 px-3 py-2 text-xs font-semibold text-secondary shadow-lg shadow-primary/10 backdrop-blur-md md:flex">
+              <span className="flex size-6 items-center justify-center rounded-full bg-primary/10">
+                <ShieldCheck aria-hidden="true" className="size-4 text-primary" />
+              </span>
               Secure booking requests
             </div>
           </div>
