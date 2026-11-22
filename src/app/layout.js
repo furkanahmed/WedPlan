@@ -31,7 +31,15 @@ export default function RootLayout({ children }) {
         <Navbar />
         <div className="flex-1">{children}</div>
         <Footer />
-        <Toaster position="top-right" richColors closeButton />
+        <Toaster
+          position="top-center"
+          offset={80}
+          mobileOffset={72}
+          duration={3000}
+          richColors
+          closeButton
+          toastOptions={{ className: "rounded-xl border-border shadow-lg" }}
+        />
       </body>
     </html>
   );
