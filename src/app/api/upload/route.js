@@ -1,4 +1,5 @@
-const maximumImageSize = 32 * 1024 * 1024;
+const maximumImageSize = 5 * 1024 * 1024;
+const allowedImageTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
 
 export async function POST(request) {
   const apiKey = process.env.IMGBB_API_KEY;
@@ -23,16 +24,16 @@ export async function POST(request) {
   if (!(image instanceof File)) {
     return Response.json({ error: "Choose an image to upload." }, { status: 400 });
   }
-  if (!image.type.startsWith("image/")) {
+  if (!allowedImageTypes.has(image.type)) {
     return Response.json(
-      { error: "The uploaded file must be an image." },
-      { status: 415 },
+      { error: "Only JPEG, PNG, and WebP images are allowed." },
+      { status: 400 },
     );
   }
   if (image.size > maximumImageSize) {
     return Response.json(
-      { error: "Images must be 32 MB or smaller." },
-      { status: 413 },
+      { error: "Images must be 5 MB or smaller." },
+      { status: 400 },
     );
   }
 
