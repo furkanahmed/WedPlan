@@ -193,8 +193,7 @@ export default function CustomerBookings() {
                         {booking.message || "No message provided."}
                       </p>
                     </div>
-                    {booking.status === "pending" ||
-                    booking.status === "accepted" ? (
+                    {booking.status === "pending" ? (
                       <Button
                         variant="destructive"
                         disabled={updatingBookingId !== ""}
