@@ -9,6 +9,7 @@ import EmptyState from "@/components/empty-state";
 import ImageGallery from "@/components/image-gallery";
 import { Skeleton } from "@/components/ui/skeleton";
 import { createBooking, fetchPublicService } from "@/lib/api";
+import { authClient } from "@/lib/auth-client";
 import { formatTaka } from "@/lib/currency";
 
 function ServiceDetailsLoading() {
@@ -39,6 +40,8 @@ function ServiceDetailsContent() {
     message: "",
   });
   const [bookingStatus, setBookingStatus] = useState("idle");
+  const { data: session } = authClient.useSession();
+  const role = session?.user?.role;
 
   function updateBookingField(event) {
     const { name, value } = event.target;
@@ -173,10 +176,19 @@ function ServiceDetailsContent() {
             {service.description || "No description is available for this service."}
           </p>
 
-          <form
-            className="mt-8 space-y-4 rounded-2xl border border-border bg-white p-5"
-            onSubmit={handleBookingSubmit}
-          >
+          {role === "vendor" || role === "admin" ? (
+            <div className="mt-8 rounded-2xl border border-border bg-white p-5">
+              <p className="text-sm font-medium text-foreground">
+                {role === "vendor"
+                  ? "Vendors cannot book their own services."
+                  : "Admins cannot submit booking requests."}
+              </p>
+            </div>
+          ) : (
+            <form
+              className="mt-8 space-y-4 rounded-2xl border border-border bg-white p-5"
+              onSubmit={handleBookingSubmit}
+            >
             <h2 className="font-heading text-xl font-semibold text-secondary">
               Request this service
             </h2>
@@ -227,7 +239,8 @@ function ServiceDetailsContent() {
                 ? "Sending..."
                 : "Send booking request"}
             </button>
-          </form>
+            </form>
+          )}
         </article>
       </div>
     </main>
