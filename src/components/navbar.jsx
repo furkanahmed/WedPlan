@@ -81,12 +81,14 @@ function ProfileMenu({ user, dashboardPath, onSignOut }) {
             <LayoutDashboard aria-hidden="true" />
             Dashboard
           </DropdownMenuItem>
-          <DropdownMenuItem
-            render={<Link href={`${dashboardPath}/profile`} />}
-          >
-            <Settings aria-hidden="true" />
-            Profile Settings
-          </DropdownMenuItem>
+          {user.role !== "admin" ? (
+            <DropdownMenuItem
+              render={<Link href={`${dashboardPath}/profile`} />}
+            >
+              <Settings aria-hidden="true" />
+              Profile Settings
+            </DropdownMenuItem>
+          ) : null}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={onSignOut}>
@@ -225,13 +227,15 @@ export default function Navbar() {
                   >
                     Dashboard
                   </Link>
-                  <Link
-                    href={`${dashboardPath}/profile`}
-                    onClick={() => setMenuOpen(false)}
-                    className="rounded-md px-3 py-3 text-base font-medium text-foreground transition-colors hover:bg-muted hover:text-primary"
-                  >
-                    Profile Settings
-                  </Link>
+                  {user.role !== "admin" ? (
+                    <Link
+                      href={`${dashboardPath}/profile`}
+                      onClick={() => setMenuOpen(false)}
+                      className="rounded-md px-3 py-3 text-base font-medium text-foreground transition-colors hover:bg-muted hover:text-primary"
+                    >
+                      Profile Settings
+                    </Link>
+                  ) : null}
                   <Button
                     variant="ghost"
                     className="justify-start px-3"
